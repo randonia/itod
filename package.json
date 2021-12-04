@@ -1,0 +1,22 @@
+{
+  "name": "itod",
+  "version": "0.0.1",
+  "description": "A simple tool to rename a photo to a date-based name",
+  "main": "itod.js",
+  "scripts": {
+    "test": "jest --watchAll"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/randonia/itod.git"
+  },
+  "author": "Ryan Andonian <ryan.andonian@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/randonia/itod/issues"
+  },
+  "homepage": "https://github.com/randonia/itod#readme",
+  "dependencies": {
+    "jest": "^27.4.3"
+  }
+}

@@ -34,6 +34,9 @@ function parseArgv(input) {
       // Support for single bool values like --verbose
       args[key] = value ?? true;
     } else {
+      if (item.includes('~')) {
+        throw new Error('Invalid image path');
+      }
       imgs.push(path.resolve(item));
     }
   });

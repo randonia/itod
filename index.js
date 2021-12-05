@@ -5,7 +5,12 @@ const { Exif_Image_DateTimeOriginal } = require('./tags.js');
 
 const { args, images } = itod.parseArgv(process.argv);
 
-const destDir = args['dest'] || path.resolve('./output');
+const destDir = path.resolve(args['dest'] || './output');
+
+if (destDir.includes('~')) {
+  console.log('Invalid relative home path. Use absolute or relative paths with no special characters');
+  throw new Error('Bad destination');
+}
 
 mkdirSync(destDir, { recursive: true });
 
@@ -30,9 +35,9 @@ function makeFnameFromDateTime(dateTime) {
 }
 
 images.forEach((image) => {
-  const { base: baseName, ext } = path.parse(image);
+  const { base: baseName } = path.parse(image);
   const exif = itod.getExifData(image);
-  const newFileName = `${makeFnameFromDateTime(exif[Exif_Image_DateTimeOriginal])}${ext}`;
+  const newFileName = `${makeFnameFromDateTime(exif[Exif_Image_DateTimeOriginal])}_${baseName}`;
   cmds.push({ action: 'copy', source: image, target: path.join(destDir, newFileName) });
 });
 

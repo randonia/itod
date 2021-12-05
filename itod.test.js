@@ -1,4 +1,5 @@
-const { parseArgv } = require('./itod');
+const path = require('path');
+const { getExifData, parseArgv } = require('./itod');
 
 describe('itod', () => {
   describe('#parseArgv', () => {
@@ -96,12 +97,19 @@ describe('itod', () => {
     });
   });
 
-  describe('#generateImgName', () => {
+  describe('#getExifData', () => {
     let imgFile;
 
-    describe('when given an existing image with proper exif data', () => {
+    describe('when given an existing image with exif data', () => {
       beforeEach(() => {
-        imgFile = '/path/to/IMG_0001.JPG';
+        imgFile = path.resolve('./test/IMG_9999.jpg');
+      });
+
+      it('should properly report EXIF data', () => {
+        const result = getExifData(imgFile);
+        expect(result).not.toBe(undefined);
+        expect(result).toHaveProperty([0x0110], 'iPhone XS');
+        expect(result).toHaveProperty([0x9003], '2020:05:06 21:41:42');
       });
     });
   });

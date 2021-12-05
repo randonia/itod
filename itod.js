@@ -1,8 +1,19 @@
-console.log(process.argv);
+const { execSync } = require('child_process');
+const path = require('path');
 
-const [,, ...imgs] = process.argv;
-
-console.log('Image list is %s images long', imgs.length);
+/**
+  * Gets EXIF data from the given file, keyed by tag ID
+  * @param {string} Absolute file path to image to process
+  */
+function getExifData(target) {
+  const linesRaw = execSync(`exif "${target}" -m -i`).toString();
+  const lines = linesRaw.split('\n').filter(line => line.trim().length);
+  return lines.map(line => line.split('\t'))
+    .reduce((acc, [key, value]) => {
+      acc[Number.parseInt(key)] = value;
+      return acc;
+    }, {});
+}
 
 /**
  * @param {string[]} input Input array representing `process.argv`
@@ -20,9 +31,10 @@ function parseArgv(input) {
       if (args[key] !== undefined) {
         throw new Error('Duplicate parameters');
       }
-      args[key] = value;
+      // Support for single bool values like --verbose
+      args[key] = value ?? true;
     } else {
-      imgs.push(item);
+      imgs.push(path.resolve(item));
     }
   });
   return {
@@ -32,5 +44,6 @@ function parseArgv(input) {
 }
 
 module.exports = {
+  getExifData,
   parseArgv,
-}
+};
